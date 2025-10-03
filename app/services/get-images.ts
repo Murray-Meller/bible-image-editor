@@ -1,12 +1,11 @@
-import fs from 'fs';
+import 'server-only';
 import path from 'path';
 import sharp from 'sharp';
 import { File } from '@web-std/file';
 
-export type ExampleImage = {
-  image: string;
+export type InputImage = {
   imagePath: string;
-  convertedFile?: File;
+  imageFile: File;
 };
 
 async function convertImage(imagePath: string, originalFilename: string): Promise<File> {
@@ -22,23 +21,15 @@ async function convertImage(imagePath: string, originalFilename: string): Promis
   );
 }
 
-export async function getImages(inputDir: string): Promise<ExampleImage[]> {
-  const files = await fs.promises.readdir(inputDir);
-
-  const images = await Promise.all(
-    files.map(async (file) => {
-      const imagePath = path.join(inputDir, file);
-      const convertedFile = await convertImage(imagePath, file);
+export async function getImagesFromPaths(imagePaths: string[]): Promise<InputImage[]> {
+  return Promise.all(
+    imagePaths.map(async (imagePath) => {
+      const convertedFile = await convertImage(imagePath, path.basename(imagePath));
 
       return {
         imagePath,
-        image: file,
-        convertedFile,
+        imageFile: convertedFile,
       };
     })
   );
-
-  console.log(`Found ${images.length} images in "${inputDir}"`);
-
-  return images;
 }
