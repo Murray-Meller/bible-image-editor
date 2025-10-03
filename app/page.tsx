@@ -60,12 +60,12 @@ export default function Home() {
             <label htmlFor="prompt" className="block text-sm font-medium text-gray-300 mb-2">
               Prompt
             </label>
-            <input
-              type="text"
+            <textarea
               id="prompt"
               name="prompt"
+              rows={5}
               required={true}
-              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-white"
+              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-white texxt"
             />
           </div>
           <button
