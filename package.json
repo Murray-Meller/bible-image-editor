@@ -1,13 +1,25 @@
 {
-  "name": "${PROJECT_NAME}",
+  "name": "bible-image-generation",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "format": "prettier --write ."
   },
-  "dependencies": {},
+  "dependencies": {
+    "@web-std/file": "^3.0.3",
+    "dotenv": "^17.2.3",
+    "openai": "^6.1.0",
+    "prettier": "^3.6.2",
+    "sharp": "^0.34.4"
+  },
   "devDependencies": {
+    "@types/node": "^24.6.2",
+    "@types/sharp": "^0.31.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   },
   "private": true

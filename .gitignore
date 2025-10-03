@@ -7,5 +7,14 @@ yarn-debug.log*
 yarn-error.log*
 /.pnp
 .pnp.js
+.DS_Store
 
-.vscode/*
+.idea
+
+.env
+
+images
+output
+sample_images
+dist
+
