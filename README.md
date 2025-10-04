@@ -18,17 +18,35 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Learn More
+## Usecase
 
-To learn more about Next.js, take a look at the following resources:
+Generate an image without an existing reference:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. You can input your story / passage to generate a prompt to use with our "OpenArt" account
+2. You can then put that prompt into "OpenArt"
+3. to generate an image in the style
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Generating an interim image
 
-## Deploy on Vercel
+1. Head to the AI frame editor
+2. Select a reference image (existing image)
+3. Point out what about that image you want it to keep
+4. Tell it what the new image should look like
+5. The output will be saved on your computer and a preview displayed
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Editing an existing image
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Head to the AI frame editor
+2. Select a the image to (existing image)
+3. Point out what about that image you want it to keep
+4. Tell it what the new image should look like
+5. The output will be saved on your computer and a preview displayed
+
+## Potential Next Steps
+
+Limitations
+
+- Currently the app processes images one at a time. This makes it hard to apply the same edit across multiple pictures.
+  - The OpenAI edit image endpoint can accept multiple images at once.
+  - This would be worth exploring to see if we can apply the same change
+  - e.g. Trying to remove the beard from Abraham across multiple images in the same way

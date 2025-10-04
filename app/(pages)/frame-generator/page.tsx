@@ -62,7 +62,7 @@ export default function FrameGenerator() {
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center font-sans">
       <main className="container mx-auto p-4 max-w-3xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">Frame Generator</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">AI Frame Editor</h1>
 
         {error && (
           <div className="bg-red-500 text-white p-3 rounded-md mb-4">
