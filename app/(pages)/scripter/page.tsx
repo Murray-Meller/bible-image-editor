@@ -40,7 +40,7 @@ const BibleInput = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="input" className="block text-sm font-medium text-gray-300 mb-2">
-              Enter Bible Reference or Script:
+              Enter story:
             </label>
             <textarea
               id="input"

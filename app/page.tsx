@@ -4,26 +4,30 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center font-sans">
-      <h1 className="text-3xl font-bold mb-12 text-center">GRN AI Utilities</h1>
-
-      <Link href={'/scripter'}>
-        <button
-          type="button"
-          className="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center font-sans ">
+      <main className="container mx-auto p-4 max-w-md flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-12 text-center">GRN AI Utilities</h1>
+        <Link
+          className="w-full mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          href={'/scripter'}
         >
-          Generate Script and Prompt For OpenArt
-        </button>
-      </Link>
+          Generate Prompt (for OpenArt)
+        </Link>
 
-      <Link href={'/frame-generator'}>
-        <button
-          type="button"
-          className="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <Link
+          className="w-full mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          href={'https://openart.ai/'}
         >
-          Generate Frame From Existing
-        </button>
-      </Link>
+          Generate initial image (using OpenArt)
+        </Link>
+
+        <Link
+          className="w-full mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          href={'/frame-generator'}
+        >
+          AI Frame Editor
+        </Link>
+      </main>
     </div>
   );
 }
