@@ -6,17 +6,18 @@ const generateInstructions = async (script: string) => {
   const prompt = `
 	${script} 
 
-	Using this script create a prompt for a salient or representative image according to the following criteria. Keep the following criteria in order.
+	With this script create a prompt for a salient or representative image according to the following criteria in their current order.
 
-	Variable: Subject description (if any)
-	Variable: Scene/environment description
-	Fixed: art style bold outline bible illustration style watercolor painting block colours
-	Fixed: lighting soft flat
-	Fixed: environment simple background gradient sky
-	Fixed: color scheme muted warm earthy tones
-	Variable: point of view ?
-	Fixed: minimal shading
+  Variable: Subject description (if any)
+  Variable: Scene/environment description
+  Fixed: art style bold outline bible illustration style watercolor painting block colours
+  Fixed: color scheme muted warm earthy tones
+  Fixed: environment simple background gradient sky
+  Variable: point of view ?
+  Fixed: lighting soft flat
+  Fixed: minimal shading
 
+ 
 	Start by outputting a detailed description. Then refine the prompt detail down to its most essential components. Use around 50 words or less than 300 characters, it will be tokenised anyway, so we can ignore stop words, punctuation and most of the grammar.
 	`;
 
