@@ -8,12 +8,13 @@ export async function saveFile(input: {
   imageBase64: string;
   outputDir: string;
 }) {
-  const outFilename = `edited-${path.basename(input.imagePath)}${input.variationIndex ? `-${input.variationIndex}` : ''}`;
-  const outPath = path.join(input.outputDir, outFilename);
+  const ext = path.extname(input.imagePath);
+  const outFilename = `edited-${path.basename(input.imagePath, ext)}${input.variationIndex ? `-${input.variationIndex}` : ''}${ext}`;
+  const outputPath = path.join(input.outputDir, outFilename);
 
-  await fs.promises.writeFile(outPath, Buffer.from(input.imageBase64, 'base64'));
+  await fs.promises.writeFile(outputPath, Buffer.from(input.imageBase64, 'base64'));
 
   return {
-    outputPath: outFilename,
+    outputPath,
   };
 }

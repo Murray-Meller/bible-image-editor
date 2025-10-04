@@ -6,14 +6,22 @@ export interface EditedImage extends InputImage {
   editedImagesAsBase64: string[];
 }
 
-export async function editImage(input: InputImage, prompt: string): Promise<EditedImage> {
+export async function editImage({
+  input,
+  prompt,
+  variations,
+}: {
+  input: InputImage;
+  prompt: string;
+  variations: number;
+}): Promise<EditedImage> {
   console.log(`Converting image for "${input.imagePath}"`);
 
   try {
     const editResponse = await openai.images.edit({
       image: input.imageFile,
       prompt,
-      n: 1,
+      n: variations,
       size: 'auto',
       input_fidelity: 'high',
       quality: 'high',

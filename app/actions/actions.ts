@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-import { runImageEdit } from '../services';
+import { ImageEditResult, runImageEdit } from '../services';
 
 const saveImagesToTempDir = async (
   images: File[]
@@ -33,9 +33,10 @@ const deleteTempDir = async (tempDir: string) => {
   await fs.rm(tempDir, { recursive: true, force: true });
 };
 
-export async function handleImageUpload(formData: FormData) {
+export async function handleImageUpload(formData: FormData): Promise<ImageEditResult[]> {
   const prompt = formData.get('prompt') as string;
   const images = formData.getAll('images') as File[];
+  const variations = formData.get('variations') as string;
 
   if (!prompt) {
     throw new Error('Prompt is required');
@@ -45,10 +46,19 @@ export async function handleImageUpload(formData: FormData) {
     throw new Error('At least one image is required');
   }
 
+  if (
+    !variations ||
+    isNaN(Number(variations)) ||
+    Number(variations) < 1 ||
+    Number(variations) > 5
+  ) {
+    throw new Error('Variations must be a number between 1 and 5');
+  }
+
   const { imagePaths, tempDir } = await saveImagesToTempDir(images);
 
   console.log(`Processing ${imagePaths.length} images with prompt: "${prompt}"`);
-  const result = await runImageEdit(prompt, imagePaths);
+  const result = await runImageEdit(prompt, imagePaths, Number(variations));
   console.log(`Finished processing. Outputs: ${result}`);
 
   await deleteTempDir(tempDir);

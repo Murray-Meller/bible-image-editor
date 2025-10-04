@@ -17,7 +17,16 @@ const createOutputDir = async () => {
   return outputDir;
 };
 
-export async function runImageEdit(prompt: string, imagePaths: string[]): Promise<string[]> {
+export interface ImageEditResult {
+  path: string;
+  imageBase64: string;
+}
+
+export async function runImageEdit(
+  prompt: string,
+  imagePaths: string[],
+  variations: number
+): Promise<ImageEditResult[]> {
   const outputDir = await createOutputDir();
 
   console.log(`Using prompt: "${prompt}"`);
@@ -27,43 +36,32 @@ export async function runImageEdit(prompt: string, imagePaths: string[]): Promis
 
   const results = await Promise.all(
     images.map(async (image) => {
-      const editedImages = await editImage(image, prompt);
+      const editedImages = await editImage({ input: image, prompt, variations });
 
-      const outputPaths = await Promise.all(
-        editedImages.editedImagesAsBase64.map(async (imageBase64, index) => {
-          const result = await saveFile({
-            imageBase64,
-            imagePath: image.imagePath,
-            outputDir,
-            variationIndex: index,
-          });
+      return await Promise.all(
+        editedImages.editedImagesAsBase64.map(
+          async (imageBase64, index): Promise<ImageEditResult> => {
+            const result = await saveFile({
+              imageBase64,
+              imagePath: image.imagePath,
+              outputDir,
+              variationIndex: index,
+            });
 
-          return result.outputPath;
-        })
+            return { path: result.outputPath, imageBase64 };
+          }
+        )
       );
-
-      return {
-        ...editedImages,
-        imageBase64: undefined, // remove base64 from summary
-        outputPaths,
-      };
     })
   );
 
   // Save summary JSON
   await fs.promises.writeFile(
     path.join(outputDir, 'summary.json'),
-    JSON.stringify(
-      {
-        prompt,
-        results,
-      },
-      null,
-      2
-    )
+    JSON.stringify({ prompt }, null, 2)
   );
 
   console.log(`Complete! Output in: ${outputDir}`);
 
-  return results.flatMap((r) => r.outputPaths) as string[];
+  return results.flat();
 }

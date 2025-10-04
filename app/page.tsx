@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { handleImageUpload } from './actions/actions';
+import { ImageEditResult } from './services';
 
 export default function Home() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<ImageEditResult[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -27,6 +28,7 @@ export default function Home() {
       // Build prompt
       const formData = new FormData(event.currentTarget);
       const prompt = formData.get('prompt') as string;
+      const variations = formData.get('variations') as string;
       const frameDetails = formData.get('frameDetails') as string;
 
       const combinedPrompt = `
@@ -42,6 +44,7 @@ export default function Home() {
       // Prepare data for image upload
       const newFormData = new FormData();
       newFormData.append('prompt', combinedPrompt);
+      newFormData.append('variations', variations);
       for (const image of formData.getAll('images') as File[]) {
         newFormData.append('images', image);
       }
@@ -58,7 +61,7 @@ export default function Home() {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center font-sans">
-      <main className="container mx-auto p-4 max-w-xl">
+      <main className="container mx-auto p-4 max-w-3xl">
         <h1 className="text-3xl font-bold mb-6 text-center">Frame Generator</h1>
 
         {error && (
@@ -79,9 +82,10 @@ export default function Home() {
               accept="image/*"
               required={true}
               onChange={handleFileChange}
-              className="mt-1 p-2 block w-full text-sm text-gray-300 border border-gray-600 rounded-md cursor-pointer bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 p-2 block w-full text-gray-300 rounded-md cursor-pointer bg-gray-800 text-white text"
             />
           </div>
+
           {previews.length > 0 && (
             <div className="grid grid-cols-3 gap-4">
               {previews.map((preview, index) => (
@@ -97,14 +101,14 @@ export default function Home() {
 
           <div>
             <label htmlFor="frameDetails" className="block text-sm font-medium text-gray-300 mb-2">
-              What important details should the AI notice before editing the image?
+              What important details should the AI notice in this image?
             </label>
             <textarea
               id="frameDetails"
               name="frameDetails"
               rows={5}
               required
-              className="mt-1 p-2 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500  text-white text"
+              className="mt-1 p-2 block w-full text-gray-300 rounded-md cursor-pointer bg-gray-800 text-white text"
             />
           </div>
 
@@ -117,9 +121,24 @@ export default function Home() {
               name="prompt"
               rows={5}
               required
-              className="mt-1 p-2 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-white text"
+              className="mt-1 p-2 block w-full text-gray-300 rounded-md cursor-pointer bg-gray-800 text-white text"
             />
           </div>
+
+          <div>
+            <label htmlFor="variations" className="block text-sm font-medium text-gray-300 mb-2">
+              How many variations should be generated? (Note: each variation costs money)
+            </label>
+            <input
+              id="variations"
+              defaultValue={1}
+              name="variations"
+              type="number"
+              required
+              className="mt-1 p-2 block w-full text-gray-300 rounded-md cursor-pointer bg-gray-800 text-white text"
+            />
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -133,11 +152,20 @@ export default function Home() {
           <>
             <h2 className="mt-4 text-xl font-bold">Result</h2>
 
-            <ul className="list-disc list-inside">
-              {data.map((result: string, idx: number) => (
-                <li key={idx}>{result}</li>
+            <div className="grid grid-cols-2 gap-4">
+              {data.map((result, index) => (
+                <figure key={index}>
+                  <img
+                    src={`data:image/[format];base64,` + result.imageBase64}
+                    alt={`Result ${index + 1}`}
+                    className="w-full h-auto rounded-lg"
+                  />
+                  <figcaption className="mt-1 text-sm text-gray-400 text-wrap wrap-break-word">
+                    Saved here: {result.path}
+                  </figcaption>
+                </figure>
               ))}
-            </ul>
+            </div>
           </>
         )}
       </main>
