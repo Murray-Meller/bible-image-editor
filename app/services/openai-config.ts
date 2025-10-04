@@ -1,5 +1,6 @@
 import 'server-only';
 import { OpenAI } from 'openai';
+import { ChatOpenAI } from '@langchain/openai';
 
 // Initialize OpenAI
 if (!process.env.OPENAI_API_KEY) {
@@ -7,3 +8,8 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 export const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+export const chat = new ChatOpenAI({
+  temperature: 0.8,
+  modelName: 'gpt-4o',
+});

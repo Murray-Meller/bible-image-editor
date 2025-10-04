@@ -42,10 +42,11 @@ const BibleInput = () => {
             <label htmlFor="input" className="block text-sm font-medium text-gray-300 mb-2">
               Enter Bible Reference or Script:
             </label>
-            <input
+            <textarea
               id="input"
               name="input"
-              type="text"
+              required={true}
+              rows={5}
               placeholder="e.g. John 3:16 or your script"
               className="mt-1 p-2 block w-full text-gray-300 rounded-md cursor-pointer bg-gray-800 text-white text"
             />
