@@ -6,7 +6,8 @@ import { handleImageUpload } from './actions/actions';
 export default function Home() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>();
+  const [data, setData] = useState<string[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -20,7 +21,8 @@ export default function Home() {
     try {
       event.preventDefault();
       setLoading(true);
-      setError(null);
+      setData([]);
+      setError(undefined);
 
       // Build prompt
       const formData = new FormData(event.currentTarget);
@@ -44,12 +46,11 @@ export default function Home() {
         newFormData.append('images', image);
       }
 
-      await handleImageUpload(newFormData);
+      const result = await handleImageUpload(newFormData);
+      setData(result);
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
       setError(errorMessage);
-      // TODO - show error to user
-      console.error('Error submitting form:', e);
     } finally {
       setLoading(false);
     }
@@ -116,7 +117,7 @@ export default function Home() {
               name="prompt"
               rows={5}
               required
-              className="mt-1 p-2 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-white texxt"
+              className="mt-1 p-2 block w-full rounded-md border-gray-600 bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-white text"
             />
           </div>
           <button
@@ -127,6 +128,18 @@ export default function Home() {
             {loading ? 'Submitting...' : 'Submit'}
           </button>
         </form>
+
+        {data.length > 0 && (
+          <>
+            <h2 className="mt-4 text-xl font-bold">Result</h2>
+
+            <ul className="list-disc list-inside">
+              {data.map((result: string, idx: number) => (
+                <li key={idx}>{result}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </main>
     </div>
   );

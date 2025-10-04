@@ -17,7 +17,7 @@ const createOutputDir = async () => {
   return outputDir;
 };
 
-export async function runImageEdit(prompt: string, imagePaths: string[]) {
+export async function runImageEdit(prompt: string, imagePaths: string[]): Promise<string[]> {
   const outputDir = await createOutputDir();
 
   console.log(`Using prompt: "${prompt}"`);
@@ -29,21 +29,23 @@ export async function runImageEdit(prompt: string, imagePaths: string[]) {
     images.map(async (image) => {
       const editedImages = await editImage(image, prompt);
 
-      const outputs = editedImages.editedImagesAsBase64.map(async (imageBase64, index) => {
-        const result = await saveFile({
-          imageBase64,
-          imagePath: image.imagePath,
-          outputDir,
-          variationIndex: index,
-        });
+      const outputPaths = await Promise.all(
+        editedImages.editedImagesAsBase64.map(async (imageBase64, index) => {
+          const result = await saveFile({
+            imageBase64,
+            imagePath: image.imagePath,
+            outputDir,
+            variationIndex: index,
+          });
 
-        return result.outputPath;
-      });
+          return result.outputPath;
+        })
+      );
 
       return {
         ...editedImages,
-        outputs,
         imageBase64: undefined, // remove base64 from summary
+        outputPaths,
       };
     })
   );
@@ -51,10 +53,17 @@ export async function runImageEdit(prompt: string, imagePaths: string[]) {
   // Save summary JSON
   await fs.promises.writeFile(
     path.join(outputDir, 'summary.json'),
-    JSON.stringify({ prompt, results }, null, 2)
+    JSON.stringify(
+      {
+        prompt,
+        results,
+      },
+      null,
+      2
+    )
   );
 
   console.log(`Complete! Output in: ${outputDir}`);
 
-  return outputDir;
+  return results.flatMap((r) => r.outputPaths) as string[];
 }

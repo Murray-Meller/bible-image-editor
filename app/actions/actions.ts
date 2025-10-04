@@ -48,8 +48,10 @@ export async function handleImageUpload(formData: FormData) {
   const { imagePaths, tempDir } = await saveImagesToTempDir(images);
 
   console.log(`Processing ${imagePaths.length} images with prompt: "${prompt}"`);
-  const outputDir = await runImageEdit(prompt, imagePaths);
-  console.log(`Finished processing. Output in: ${outputDir}`);
+  const result = await runImageEdit(prompt, imagePaths);
+  console.log(`Finished processing. Outputs: ${result}`);
 
   await deleteTempDir(tempDir);
+
+  return result;
 }
