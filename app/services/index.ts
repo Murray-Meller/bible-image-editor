@@ -9,10 +9,11 @@ const OUTPUT_DIR = process.env.OUTPUT_DIR || 'output';
 const OUTPUT_BASE = path.join(process.cwd(), OUTPUT_DIR);
 
 const createOutputDir = async () => {
-  // Prepare output directory
   const timestamp = new Date().toISOString();
   const outputDir = path.join(OUTPUT_BASE, timestamp);
+
   await fs.promises.mkdir(outputDir, { recursive: true });
+
   return outputDir;
 };
 
@@ -28,8 +29,13 @@ export async function runImageEdit(prompt: string, imagePaths: string[]) {
     images.map(async (image) => {
       const editedImages = await editImage(image, prompt);
 
-      const outputs = editedImages.editedImagesAsBase64.map(async (imageBase64) => {
-        const result = await saveFile({ imageBase64, imagePath: image.imagePath, outputDir });
+      const outputs = editedImages.editedImagesAsBase64.map(async (imageBase64, index) => {
+        const result = await saveFile({
+          imageBase64,
+          imagePath: image.imagePath,
+          outputDir,
+          variationIndex: index,
+        });
 
         return result.outputPath;
       });

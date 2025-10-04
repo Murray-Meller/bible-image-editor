@@ -10,7 +10,6 @@ const saveImagesToTempDir = async (
   images: File[]
 ): Promise<{ imagePaths: string[]; tempDir: string }> => {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'bible-images-'));
-  console.log(`Created temporary directory: ${tempDir}`);
 
   const imagePaths = await Promise.all(
     images.map(async (image) => {
@@ -32,7 +31,6 @@ const saveImagesToTempDir = async (
 
 const deleteTempDir = async (tempDir: string) => {
   await fs.rm(tempDir, { recursive: true, force: true });
-  console.log(`Cleaned up temporary directory: ${tempDir}`);
 };
 
 export async function handleImageUpload(formData: FormData) {

@@ -16,6 +16,7 @@ export async function editImage(input: InputImage, prompt: string): Promise<Edit
       n: 1,
       size: 'auto',
       input_fidelity: 'high',
+      quality: 'high',
       model: 'gpt-image-1',
     });
 
